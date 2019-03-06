@@ -7,15 +7,19 @@ class Item {
 }
 
 class Shop {
-  constructor(items=[]){
+  constructor(items=[], backstageItems = ['Backstage passes to a TAFKAL80ETC concert', 'Aged Brie'], legendaryItems = ['Sulfuras, Hand of Ragnaros']) {
     this.items = items;
+    this.backstageItems = backstageItems
+    this.legendaryItems = legendaryItems
   }
 
   updateQuality() {
     for (var i = 0; i < this.items.length; i++) {
-      if (this.items[i].name === 'Sulfuras, Hand of Ragnaros') { continue }
+      if (this.legendaryItems.includes(this.items[i].name)) { continue }
 
-      if (this.items[i].name != 'Aged Brie' && this.items[i].name != 'Backstage passes to a TAFKAL80ETC concert') {
+      this.items[i].sellIn -= 1
+
+      if (!this.backstageItems.includes(this.items[i].name)) {
         this.updateRegular(this.items[i])
       } else {
         this.updateBackstage(this.items[i])
@@ -26,37 +30,28 @@ class Shop {
   }
 
   updateRegular(item) {
-    if (item.quality > 0) {
-      item.quality -= 1
-    }
-    item.sellIn -= 1
-    if (item.sellIn < 0 && item.quality > 0) {
+    if (item.sellIn < 0 && item.quality > 1) {
+      item.quality -= 2
+    } else if (item.quality > 0) {
       item.quality -= 1
     }
   }
 
   updateBackstage(item) {
-    if (item.quality < 50) {
-      item.quality = item.quality + 1;
+    if (item.sellIn <= 0) {
+      item.quality = 0
+    } else if (item.quality < 50) {
+      item.quality += 1;
       if (item.name == 'Backstage passes to a TAFKAL80ETC concert') {
-        if (item.sellIn < 11) {
-          if (item.quality < 50) {
-            item.quality = item.quality + 1;
-          }
+        if (item.sellIn < 10 && item.quality < 50) {
+            item.quality += 1;
         }
-        if (item.sellIn < 6) {
-          if (item.quality < 50) {
-            item.quality = item.quality + 1;
-          }
+        if (item.sellIn < 5 && item.quality < 50) {
+            item.quality += 1;
         }
       }
     }
-    item.sellIn -= 1
-    if (item.sellIn <= 0) {
-      item.quality = 0
-    }
   }
-
 }
 
 module.exports = {

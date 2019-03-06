@@ -90,7 +90,7 @@ describe("Gilded Rose", function() {
       });
 
       it("should not increase quality past 50", function() {
-        gildedRose = new Shop([ new Item("Backstage passes to a TAFKAL80ETC concert", 5, 50) ]);
+        gildedRose = new Shop([ new Item("Backstage passes to a TAFKAL80ETC concert", 2, 49) ]);
         items = gildedRose.updateQuality();
         expect(items[0].quality).toEqual(50);
       });
