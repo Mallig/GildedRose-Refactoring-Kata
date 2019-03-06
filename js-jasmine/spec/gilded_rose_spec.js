@@ -66,7 +66,7 @@ describe("Gilded Rose", function() {
   
         describe("when sellIn value between 1 and 5 inclusive", function() {
           it("should increase quality by 3", function() {
-            gildedRose = new Shop([ new Item("Backstage passes to a TAFKAL80ETC concert", 1, 10) ]);
+            gildedRose = new Shop([ new Item("Backstage passes to a TAFKAL80ETC concert", 2, 10) ]);
             items = gildedRose.updateQuality();
             expect(items[0].quality).toEqual(13);
           });
