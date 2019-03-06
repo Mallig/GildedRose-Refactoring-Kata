@@ -95,5 +95,13 @@ describe("Gilded Rose", function() {
         expect(items[0].quality).toEqual(50);
       });
     });
+
+    describe("for 'Conjured' items", function() {
+      it("should decrease quality by 2", function() {
+        gildedRose = new Shop([ new Item("Conjured Tennis Racket", 5, 20) ]);
+        items = gildedRose.updateQuality();
+        expect(items[0].quality).toEqual(18)
+      })
+    })
   });
 });
