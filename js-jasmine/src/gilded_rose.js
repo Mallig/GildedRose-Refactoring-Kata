@@ -30,10 +30,11 @@ class Shop {
   }
 
   updateRegular(item) {
+    let multiplier = item.name.slice(0, 8) === "Conjured" ? 2 : 1
     if (item.sellIn < 0 && item.quality > 1) {
-      item.quality -= 2
+      item.quality -= 2 * multiplier
     } else if (item.quality > 0) {
-      item.quality -= 1
+      item.quality -= 1 * multiplier
     }
   }
 
