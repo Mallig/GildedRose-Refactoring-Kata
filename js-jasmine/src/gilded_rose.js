@@ -17,11 +17,12 @@ class Shop {
     for (var i = 0; i < this.items.length; i++) {
       if (this.legendaryItems.includes(this.items[i].name)) { continue }
 
-      this.items[i].sellIn -= 1
-
       if (!this.backstageItems.includes(this.items[i].name)) {
-        this.updateRegular(this.items[i])
-        this.items[i].name.slice(0, 8) === "Conjured" ? this.updateRegular(this.items[i]) : false
+        if (this.items[i].name.slice(0, 8) !== "Conjured") {
+          this.updateRegular(this.items[i])
+        } else {
+          this.updateConjured(this.items[i])
+        }
       } else {
         this.updateBackstage(this.items[i])
       }
@@ -30,7 +31,15 @@ class Shop {
     return this.items;
   }
 
+  updateConjured(item) {
+    this.updateRegular(item)
+    item.sellIn += 1
+    this.updateRegular(item)
+  }
+
   updateRegular(item) {
+    item.sellIn -= 1
+
     if (item.sellIn < 0 && item.quality > 1) {
       item.quality -= 2
     } else if (item.quality > 0) {
@@ -39,6 +48,8 @@ class Shop {
   }
 
   updateBackstage(item) {
+    item.sellIn -= 1
+
     if (item.sellIn <= 0) {
       item.quality = 0
     } else if (item.quality < 50) {
