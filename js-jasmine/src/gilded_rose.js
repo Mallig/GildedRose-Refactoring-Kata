@@ -21,6 +21,7 @@ class Shop {
 
       if (!this.backstageItems.includes(this.items[i].name)) {
         this.updateRegular(this.items[i])
+        this.items[i].name.slice(0, 8) === "Conjured" ? this.updateRegular(this.items[i]) : false
       } else {
         this.updateBackstage(this.items[i])
       }
@@ -30,11 +31,10 @@ class Shop {
   }
 
   updateRegular(item) {
-    let multiplier = item.name.slice(0, 8) === "Conjured" ? 2 : 1
     if (item.sellIn < 0 && item.quality > 1) {
-      item.quality -= 2 * multiplier
+      item.quality -= 2
     } else if (item.quality > 0) {
-      item.quality -= 1 * multiplier
+      item.quality -= 1
     }
   }
 
