@@ -18,7 +18,7 @@ describe("Gilded Rose", function() {
     describe("for regular items", function() {
       describe("when sellIn value greater than zero", function() {
         it("should decrease item quality by 1", function() {
-          gildedRose = new Shop([ new Item("foo", 1, 10) ]);
+          gildedRose = new Shop([ new Item("foo", 2, 10) ]);
           items = gildedRose.updateQuality();
           expect(items[0].quality).toEqual(9);
         });
@@ -46,53 +46,51 @@ describe("Gilded Rose", function() {
       });
     });
 
-    describe("for 'Backstage Pass' items", function() {
-      describe("if not brie", function() {
-        describe("when sellIn value is greater than 10", function() {
-          it("should increase quality by 1", function() {
-            gildedRose = new Shop([ new Item("Backstage passes to a TAFKAL80ETC concert", 11, 10) ]);
-            items = gildedRose.updateQuality();
-            expect(items[0].quality).toEqual(11);
-          });
-        });
-  
-        describe("when sellIn value between 6 and 10 inclusive", function() {
-          it("should increase quality by 2", function() {
-            gildedRose = new Shop([ new Item("Backstage passes to a TAFKAL80ETC concert", 6, 10) ]);
-            items = gildedRose.updateQuality();
-            expect(items[0].quality).toEqual(12)
-          });
-        });
-  
-        describe("when sellIn value between 1 and 5 inclusive", function() {
-          it("should increase quality by 3", function() {
-            gildedRose = new Shop([ new Item("Backstage passes to a TAFKAL80ETC concert", 2, 10) ]);
-            items = gildedRose.updateQuality();
-            expect(items[0].quality).toEqual(13);
-          });
-        });
-      });
-
-      describe("if brie", function() {
+    describe("for 'Backstage Pass'", function() {
+      describe("when sellIn value is greater than 10", function() {
         it("should increase quality by 1", function() {
-          gildedRose = new Shop([ new Item("Aged Brie", 3, 10) ]);
+          gildedRose = new Shop([ new Item("Backstage passes to a TAFKAL80ETC concert", 11, 10) ]);
           items = gildedRose.updateQuality();
           expect(items[0].quality).toEqual(11);
         });
       });
 
-      describe("when sellIn value reaches zero", function() {
-        it("should drop quality to zero", function() {
-          gildedRose = new Shop([ new Item("Backstage passes to a TAFKAL80ETC concert", 0, 10) ]);
+      describe("when sellIn value between 6 and 10 inclusive", function() {
+        it("should increase quality by 2", function() {
+          gildedRose = new Shop([ new Item("Backstage passes to a TAFKAL80ETC concert", 6, 10) ]);
           items = gildedRose.updateQuality();
-          expect(items[0].quality).toEqual(0);
+          expect(items[0].quality).toEqual(12)
         });
       });
 
+      describe("when sellIn value between 1 and 5 inclusive", function() {
+        it("should increase quality by 3", function() {
+          gildedRose = new Shop([ new Item("Backstage passes to a TAFKAL80ETC concert", 2, 10) ]);
+          items = gildedRose.updateQuality();
+          expect(items[0].quality).toEqual(13);
+        });
+      });
+    });
+
+    describe("For Aged Brie", function() {
+      it("should increase quality by 1", function() {
+        gildedRose = new Shop([ new Item("Aged Brie", 3, 10) ]);
+        items = gildedRose.updateQuality();
+        expect(items[0].quality).toEqual(11);
+      });
+
       it("should not increase quality past 50", function() {
-        gildedRose = new Shop([ new Item("Backstage passes to a TAFKAL80ETC concert", 2, 49) ]);
+        gildedRose = new Shop([ new Item("Aged Brie", 2, 50) ]);
         items = gildedRose.updateQuality();
         expect(items[0].quality).toEqual(50);
+      });
+
+      describe("when sellIn value reaches zero", function() {
+        it("should drop quality to zero", function() {
+          gildedRose = new Shop([ new Item("Aged Brie", 1, 10) ]);
+          items = gildedRose.updateQuality();
+          expect(items[0].quality).toEqual(0);
+        });
       });
     });
 

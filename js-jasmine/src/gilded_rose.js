@@ -7,62 +7,73 @@ class Item {
 }
 
 class Shop {
-  constructor(items=[], backstageItems = ['Backstage passes to a TAFKAL80ETC concert', 'Aged Brie'], legendaryItems = ['Sulfuras, Hand of Ragnaros']) {
+  constructor(items=[]) {
     this.items = items;
-    this.backstageItems = backstageItems
-    this.legendaryItems = legendaryItems
   }
 
   updateQuality() {
+    const sellInModifier = 1
+    
     for (var i = 0; i < this.items.length; i++) {
-      if (this.legendaryItems.includes(this.items[i].name)) { continue }
+      var qualityModifier
+      let item = this.items[i]
+      if (item.name === 'Sulfuras, Hand of Ragnaros') { continue; }
 
-      if (!this.backstageItems.includes(this.items[i].name)) {
-        if (this.items[i].name.slice(0, 8) !== "Conjured") {
-          this.updateRegular(this.items[i])
-        } else {
-          this.updateConjured(this.items[i])
-        }
-      } else {
-        this.updateBackstage(this.items[i])
-      }
+      item.sellIn -= sellInModifier
+
+      qualityModifier = this.calculateQualityModifier(item)
+      this.adjustQuality(item, qualityModifier)
     }
 
     return this.items;
   }
 
-  updateConjured(item) {
-    this.updateRegular(item)
-    item.sellIn += 1
-    this.updateRegular(item)
-  }
-
-  updateRegular(item) {
-    item.sellIn -= 1
-
-    if (item.sellIn < 0 && item.quality > 1) {
-      item.quality -= 2
-    } else if (item.quality > 0) {
-      item.quality -= 1
+  calculateQualityModifier(item) {
+    let result
+    switch (item.name.slice(0,16)) {
+      case 'Aged Brie':
+        item.sellIn <= 0 ? result = item.quality : result = -1
+        break
+      case 'Backstage passes':
+        result = this.backstagePassQualityModifier(item)
+        break
+      default:
+        result = 1
     }
-  }
-
-  updateBackstage(item) {
-    item.sellIn -= 1
 
     if (item.sellIn <= 0) {
-      item.quality = 0
-    } else if (item.quality < 50) {
-      item.quality += 1;
-      if (item.name == 'Backstage passes to a TAFKAL80ETC concert') {
-        if (item.sellIn < 10 && item.quality < 50) {
-            item.quality += 1;
-        }
-        if (item.sellIn < 5 && item.quality < 50) {
-            item.quality += 1;
-        }
+      result *= 2
+    }
+    if (item.name.slice(0,8) === 'Conjured') {
+      result *= 2
+    }
+
+    return result
+  }
+
+  adjustQuality(item, modifier) {
+    while (modifier !== 0 && item.quality < 50 && item.quality > 0) {
+      if (modifier < 0) {
+        item.quality += 1
+        modifier++
+      } else {
+        item.quality -= 1
+        modifier--
       }
     }
+  }
+
+  backstagePassQualityModifier(item) {
+    let result = 0
+
+    if (item.sellIn <= 0) {
+      result = item.quality
+    } else if (item.quality < 50) {
+      result -= 1;
+      if (item.sellIn < 10) { result -= 1; }
+      if (item.sellIn < 5) { result -= 1; }
+    }
+    return result
   }
 }
 
