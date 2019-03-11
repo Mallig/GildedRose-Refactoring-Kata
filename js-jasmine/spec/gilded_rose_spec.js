@@ -49,7 +49,7 @@ describe("Gilded Rose", function() {
     describe("for 'Backstage Pass'", function() {
       describe("when sellIn value is greater than 10", function() {
         it("should increase quality by 1", function() {
-          gildedRose = new Shop([ new Item("Backstage passes to a TAFKAL80ETC concert", 11, 10) ]);
+          gildedRose = new Shop([ new Item("Backstage passes to a TAFKAL80ETC concert", 12, 10) ]);
           items = gildedRose.updateQuality();
           expect(items[0].quality).toEqual(11);
         });
@@ -57,7 +57,7 @@ describe("Gilded Rose", function() {
 
       describe("when sellIn value between 6 and 10 inclusive", function() {
         it("should increase quality by 2", function() {
-          gildedRose = new Shop([ new Item("Backstage passes to a TAFKAL80ETC concert", 6, 10) ]);
+          gildedRose = new Shop([ new Item("Backstage passes to a TAFKAL80ETC concert", 11, 10) ]);
           items = gildedRose.updateQuality();
           expect(items[0].quality).toEqual(12)
         });
