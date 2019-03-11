@@ -86,10 +86,10 @@ describe("Gilded Rose", function() {
       });
 
       describe("when sellIn value reaches zero", function() {
-        it("should drop quality to zero", function() {
+        it("quality should continue to increase", function() {
           gildedRose = new Shop([ new Item("Aged Brie", 1, 10) ]);
           items = gildedRose.updateQuality();
-          expect(items[0].quality).toEqual(0);
+          expect(items[0].quality).toEqual(11);
         });
       });
     });

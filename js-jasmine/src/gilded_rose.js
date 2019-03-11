@@ -28,28 +28,23 @@ class Shop {
     let modifier
     switch (item.name.slice(0,16)) {
       case 'Aged Brie':
-        item.sellIn <= 0 ? modifier = item.quality : modifier = -1
+        modifier = -1
         break
       case 'Backstage passes':
         modifier = this.backstagePassQualityModifier(item)
         break
       default:
-        modifier = 1
+        modifier = 1 * this.qualityModifierMultiplier(item)
     }
-
-    modifier *= this.qualityModifierMultiplier(item)
 
     return modifier
   }
 
   qualityModifierMultiplier(item) {
     let multiplier = 1
-    if (item.sellIn <= 0) {
-      multiplier *= 2
-    }
-    if (item.name.slice(0,8) === 'Conjured') {
-      multiplier *= 2
-    }
+
+    if (item.sellIn <= 0) { multiplier *= 2 }
+    if (item.name.slice(0,8) === 'Conjured') { multiplier *= 2 }
 
     return multiplier
   }
