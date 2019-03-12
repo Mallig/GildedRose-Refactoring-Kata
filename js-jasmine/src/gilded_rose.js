@@ -54,24 +54,23 @@ class AgedBrieItem extends RegularItem {
 
 class ItemFactory {
   setupInventory(items) {
-    let stockList = []
-    for (var i=0; i < items.length; i++) {
-      stockList.push(this.create(items[i].name, items[i].sellIn, items[i].quality))
-    }
-    return stockList
+    return items.map(function(item) {
+      let constructor = this.itemConstructor(item.name)
+      return new constructor(item.name, item.sellIn, item.quality)
+    }, this)
   }
 
-  create(name, sellIn, quality) {
+  itemConstructor(name) {
     if (name.startsWith("Backstage passes")) { 
-      return new BackstagePassItem(name, sellIn, quality)
+      return BackstagePassItem
     } else if (name.startsWith("Aged Brie")) {
-      return new AgedBrieItem(name, sellIn, quality)
+      return AgedBrieItem
     } else if (name.startsWith("Conjured")) {
-      return new ConjuredItem(name, sellIn, quality)
+      return ConjuredItem
     } else if (name.startsWith("Sulfuras")) {
-      return new LegendaryItem(name, sellIn, quality)
+      return LegendaryItem
     } else {
-      return new RegularItem(name, sellIn, quality)
+      return RegularItem
     }
   }
 }
