@@ -1,8 +1,8 @@
 import ItemFactory from './item_factory'
 
 class Shop {
-  constructor(items = []) {
-    this.itemFactory = new ItemFactory
+  constructor(items = [], itemFactory = ItemFactory) {
+    this.itemFactory = new itemFactory
     this.items = this.itemFactory.setupInventory(items);
   }
 
