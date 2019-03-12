@@ -6,69 +6,88 @@ class Item {
   }
 }
 
-class Shop {
-  constructor(items=[]) {
-    this.items = items;
+class RegularItem extends Item {
+  update() {
+    this.updateSellIn()
+    this.updateQuality()
   }
 
   updateQuality() {
-    for (var i = 0; i < this.items.length; i++) {
-      let item = this.items[i]
-      if (item.name === 'Sulfuras, Hand of Ragnaros') { continue; }
+    this.quality -= 1
+    if (this.sellIn < 0) this.quality -= 1
+    if (this.quality < 0) this.quality = 0
+  }
 
-      item.sellIn -= 1
+  updateSellIn() {
+    this.sellIn -= 1
+  }
+}
 
-      this.applyQualityModifier(item, this.calculateQualityModifier(item))
+class ConjuredItem extends RegularItem {
+  updateQuality() {
+    this.quality -= 2
+    if (this.sellIn < 0) this.quality -= 2
+    if (this.quality < 0) this.quality = 0
+  }
+}
+
+class LegendaryItem extends RegularItem {
+  update() { }
+}
+
+class BackstagePassItem extends RegularItem {
+  updateQuality() {
+    this.quality += 1
+    if (this.sellIn <= 10) this.quality += 1
+    if (this.sellIn <= 5) this.quality += 1
+    if (this.sellIn < 0) this.quality = 0
+    if (this.quality > 50) this.quality = 50
+  }
+}
+
+class AgedBrieItem extends RegularItem {
+  updateQuality() {
+    this.quality += 1
+    if (this.quality > 50) this.quality = 50
+  }
+}
+
+class ItemFactory {
+  setupInventory(items) {
+    let stockList = []
+    for (var i=0; i < items.length; i++) {
+      stockList.push(this.create(items[i].name, items[i].sellIn, items[i].quality))
+    }
+    return stockList
+  }
+
+  create(name, sellIn, quality) {
+    if (name.startsWith("Backstage passes")) { 
+      return new BackstagePassItem(name, sellIn, quality)
+    } else if (name.startsWith("Aged Brie")) {
+      return new AgedBrieItem(name, sellIn, quality)
+    } else if (name.startsWith("Conjured")) {
+      return new ConjuredItem(name, sellIn, quality)
+    } else if (name.startsWith("Sulfuras")) {
+      return new LegendaryItem(name, sellIn, quality)
+    } else {
+      return new RegularItem(name, sellIn, quality)
+    }
+  }
+}
+
+class Shop {
+  constructor(items=[]) {
+    this.itemFactory = new ItemFactory
+    this.items = this.itemFactory.setupInventory(items);
+  }
+
+  updateStock() {
+    for (var i=0; i < this.items.length; i++) {
+      this.items[i].update()
     }
 
-    return this.items;
-  }
-
-  calculateQualityModifier(item) {
-    let modifier
-    switch (item.name.slice(0,16)) {
-      case 'Aged Brie':
-        modifier = -1
-        break
-      case 'Backstage passes':
-        modifier = this.backstagePassQualityModifier(item)
-        break
-      default:
-        modifier = 1 * this.qualityModifierMultiplier(item)
-    }
-
-    return modifier
-  }
-
-  qualityModifierMultiplier(item) {
-    let multiplier = 1
-
-    if (item.sellIn <= 0) { multiplier *= 2 }
-    if (item.name.slice(0,8) === 'Conjured') { multiplier *= 2 }
-
-    return multiplier
-  }
-
-  applyQualityModifier(item, modifier) {
-    while (modifier !== 0 && item.quality < 50 && item.quality > 0) {
-      if (modifier < 0) {
-        item.quality += 1
-        modifier++
-      } else {
-        item.quality -= 1
-        modifier--
-      }
-    }
-  }
-
-  backstagePassQualityModifier(item) {
-    let modifier = -1
-
-    if (item.sellIn <= 0) { modifier = item.quality }
-    if (item.sellIn <= 10) { modifier -= 1; }
-    if (item.sellIn <= 5) { modifier -= 1; }
-
-    return modifier
+    return this.items
   }
 }
 
