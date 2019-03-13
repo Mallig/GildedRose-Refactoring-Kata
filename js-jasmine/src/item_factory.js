@@ -3,9 +3,13 @@ import { RegularItem, ConjuredItem, LegendaryItem, AgedBrieItem, BackstagePassIt
 export default class ItemFactory {
   setupInventory(items) {
     return items.map(function (item) {
-      let constructor = this.itemConstructor(item.name)
-      return new constructor(item.name, item.sellIn, item.quality)
+      return this.createItem(item)
     }, this)
+  }
+
+  createItem(item) {
+    let constructor = this.itemConstructor(item.name)
+    return new constructor(item.name, item.sellIn, item.quality)
   }
 
   itemConstructor(name) {
