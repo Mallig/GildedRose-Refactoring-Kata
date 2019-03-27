@@ -7,14 +7,19 @@ class Item {
 }
 
 class RegularItem extends Item {
+  constructor(name, sellIn, quality) {
+    super(name, sellIn, quality)
+    this.multiplier = 1
+  }
+
   update() {
     this.updateSellIn()
     this.updateQuality()
   }
 
   updateQuality() {
-    this.quality -= 1
-    if (this.sellIn < 0) this.quality -= 1
+    this.quality -= 1 * this.multiplier
+    if (this.sellIn < 0) this.quality -= 1 * this.multiplier
     if (this.quality < 0) this.quality = 0
   }
 
@@ -24,10 +29,9 @@ class RegularItem extends Item {
 }
 
 class ConjuredItem extends RegularItem {
-  updateQuality() {
-    this.quality -= 2
-    if (this.sellIn < 0) this.quality -= 2
-    if (this.quality < 0) this.quality = 0
+  constructor(name, sellIn, quality) {
+    super(name, sellIn, quality)
+    this.multiplier = 2
   }
 }
 
